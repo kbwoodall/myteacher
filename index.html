@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale-1.0">
+  <title>Gemini Client</title>
+  <style>
+    body {
+      background-color: #4ade80; /* green-400 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      color: black;
+    }
+    h1, h2, label {
+        font-weight: bold;
+    }
+    #prompt {
+        width: 80vw;
+        height: 20vh;
+        font-size: 1.2em;
+        background-color: #bef264;
+    }
+    button {
+        padding: 15px 30px;
+        font-size: 1.2em;
+        margin-top: 10px;
+        background-color: #bef264;
+    }
+    #response {
+        text-align: center;
+        font-weight: bold;
+        color: black;
+        width: 80vw;
+        padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gemini Client</h1>
+  <form id="prompt-form">
+    <label for="prompt">Enter a prompt:</label><br>
+    <textarea id="prompt" name="prompt" rows="4" cols="50"></textarea><br>
+    <button type="submit">Generate Text</button>
+  </form>
+  <h2>Generated Text:</h2>
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('prompt-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const prompt = document.getElementById('prompt').value;
+      const responseDiv = document.getElementById('response');
+
+      responseDiv.textContent = 'Loading...';
+
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ prompt }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        responseDiv.textContent = data.generation;
+      } catch (error) {
+        console.error('Error:', error);
+        responseDiv.textContent = 'Error: Could not fetch response.';
+      }
+    });
+  </script>
+</body>
+</html>
