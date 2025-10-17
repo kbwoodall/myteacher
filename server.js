@@ -9,6 +9,8 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+console.log('GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY ? 'Exists' : 'Does not exist');
+
 const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
 const app = express();
